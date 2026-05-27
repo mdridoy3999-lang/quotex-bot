@@ -8,7 +8,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes
 from telegram import Update
 
 # ===================== CONFIG =====================
-BOT_TOKEN =  BOT_TOKEN = "8409479235:AAGBBODhZBQyKf76-zKevURrxHzYM4nINOA"  # @BotFather থেকে নিন
+BOT_TOKEN = "8409479235:AAGBBODhZBQyKf76-zKevURrxHzYM4nINOA"  # @BotFather থেকে নিন
 CHAT_ID   = "8583376205"              # আপনার Chat ID
 
 # ট্রেড করার পেয়ার লিস্ট (Yahoo Finance symbol)
