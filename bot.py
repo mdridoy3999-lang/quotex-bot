@@ -1,6 +1,7 @@
-from flask import Flask, jsonify, render_template_string, request
+import os
 import random
 import time
+from flask import Flask, jsonify, render_template_string, request
 
 app = Flask(__name__)
 
@@ -126,11 +127,13 @@ let autoMode = false;
 let autoInterval = null;
 let wins = 0; let losses = 0;
 let baseInvest = 10; let m1Invest = 23;
+
 function updateClock(){
     let d = new Date();
     clock.innerHTML = String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0") + ":" + String(d.getSeconds()).padStart(2,"0");
 }
 setInterval(updateClock, 1000); updateClock();
+
 function calculateAmounts() {
     let bal = parseFloat(document.getElementById("userBalance").value) || 1000;
     baseInvest = Math.round(bal * 0.01);
@@ -138,6 +141,7 @@ function calculateAmounts() {
     m1Invest = Math.round(baseInvest * 2.3);
 }
 calculateAmounts();
+
 function updateDashboard(){
     document.getElementById("dashWins").innerText = wins;
     document.getElementById("dashLosses").innerText = losses;
@@ -145,6 +149,7 @@ function updateDashboard(){
     let acc = total > 0 ? Math.round((wins / total) * 100) : 0;
     document.getElementById("dashAcc").innerText = acc + "%";
 }
+
 function logManualResult(result) {
     if(result === 'win') { wins++; } else { losses++; }
     updateDashboard();
@@ -154,6 +159,7 @@ function logManualResult(result) {
         <div id="icon">👍</div>
         <div id="signal" style="color:#fff; font-size: 20px;">RESULT LOGGED! NEXT SCAN READY</div>`;
 }
+
 function startScan(){
     calculateAmounts();
     displayArea.className = "signalBox";
@@ -189,6 +195,7 @@ function startScan(){
         mainContent.innerHTML = `<div style="color:#ff4466;">Server Error!</div>`;
     });
 }
+
 function toggleAutoMode(){
     autoMode = !autoMode;
     if(autoMode){
@@ -200,11 +207,25 @@ function toggleAutoMode(){
         clearInterval(autoInterval);
     }
 }
+
 function resetStats(){ wins = 0; losses = 0; updateDashboard(); }
+
+// Pair Event Listener
 document.querySelectorAll('.pair').forEach(item => {
     item.addEventListener('click', function() {
         document.querySelector('.pair.active').classList.remove('active');
-        this.classList.add('active'); selectedPair = this.getAttribute('data-name');
+        this.classList.add('active'); 
+        selectedPair = this.getAttribute('data-name');
+        if(autoMode) { toggleAutoMode(); toggleAutoMode(); }
+    });
+});
+
+// Timeframe Event Listener Fixed
+document.querySelectorAll('.tf button').forEach(item => {
+    item.addEventListener('click', function() {
+        document.querySelector('.tf button.active-tf').classList.remove('active-tf');
+        this.classList.add('active-tf');
+        selectedTF = this.getAttribute('data-tf');
         if(autoMode) { toggleAutoMode(); toggleAutoMode(); }
     });
 });
@@ -250,4 +271,5 @@ def get_quotex_signal():
     return jsonify({"status":"success","pair":p,"signal":sig,"trend":trnd,"accuracy":acc,"pattern":ptn})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=10000)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host='0.0.0.0', port=port)
