@@ -230,7 +230,7 @@ cat << 'EOF' > templates/index.html
 <body>
     <div class="container-fluid py-4">
         <header class="pb-3 mb-4 border-bottom d-flex justify-content-between align-items-center">
-            <h1 class="h3 text-primary font-weight-bold">📈 Trading Analyzer Pro</h1>
+            <h1 class="h3 text-primary font-weight-bold">Trading Analyzer Pro</h1>
             <span class="badge bg-success fs-6">Render Live App</span>
         </header>
 
